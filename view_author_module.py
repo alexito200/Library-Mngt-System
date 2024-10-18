@@ -1,10 +1,19 @@
-
-authors = {}
-
-def view_author(authors):
+def view_author(conn):
     author_name = input("\nEnter the author's name you want to search for: ")
-    if author_name in authors:
-        author_info = authors[author_name]
-        print(f"\nAuthor Details:\nName: {author_name}\nBiography: {author_info['biography']}")
-    else:
-        print(f'\nNo author found with the name: {author_name}')
+
+    cursor = conn.cursor()     # Create a cursor object
+
+    try:
+        # SQL query to retrieve author details
+        query = "SELECT biography FROM authors WHERE author_name = %s"
+        cursor.execute(query, (author_name,))
+        author_info = cursor.fetchone()
+
+        if author_info:
+            print(f"\nAuthor Details:\nName: {author_name}\nBiography: {author_info[0]}")
+        else:
+            print(f'\nNo author found with the name: {author_name}')
+    except Exception as e:
+        print(f"\nAn error occurred while viewing the author: {e}")
+    finally:
+        conn.close()    # Close the connection

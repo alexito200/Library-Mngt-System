@@ -1,17 +1,23 @@
+from mysql.connector import Error
 
-books = {}
+def add_book(conn):
+    cursor = conn.cursor()
 
-def add_book(books):
-    """Function to add a book to the library."""
-    book_title = input('\nTell me the title of the book: ')
-    book_author = input(f'\nWho is the author of {book_title}?: ')
-    book_genre = input(f'\nWhat is the genre of {book_title}?: ')
+    # Prompt user for book details
+    title = input("Enter book title: ")
+    # author_id = input("Enter author ID: ")
+    genre = input("Enter book genre: ")
+    availability = True  # By default, new books are available
 
-    # Add the book to the provided dictionary
-    books[book_title] = {
-        "author": book_author,
-        "genre": book_genre,
-        "status": 'available'
-    }
-    print(f'\nBook "{book_title}" added successfully!')
+    # SQL query to insert a new book
+    try:
+        query = '''INSERT INTO books (title, genre, availability) VALUES (%s, %s, %s)'''
+        cursor.execute(query, (title, genre, availability))
+        conn.commit()
+        print(f"Book '{title}' added successfully!")
 
+    except Error as e:
+        print(f"An error occurred: {e}")
+    
+    finally:
+        cursor.close()

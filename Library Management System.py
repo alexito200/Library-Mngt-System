@@ -1,21 +1,18 @@
-# Initialize dictionaries outside functions to ensure global access
-books = {}
-users = {}
-authors = {}
-
-class Book:
-    def __init__(self, title, author, genre, availability):
-        self.title = title
-        self.author = author
-        self.genre = genre
-        self.availability = availability
-
-from add_book_module import add_book, books
+# main_program.py
+from sql_connection import connect_database
+from add_book_module import add_book
 from borrow_return_module import borrow_book, return_book
 from search_book_module import search_book
 from display_books_module import display_books
+from add_user_module import add_user
+from view_user_module import view_user
+from display_users_module import display_users
+from add_author_module import add_author
+from view_author_module import view_author
+from display_authors_module import display_authors
 
-def book_operations():
+# Function Definitions
+def book_operations(conn):
     while True:
         print("\nBook Operations")
         print("\n1. Add a new book")
@@ -29,22 +26,23 @@ def book_operations():
 
         try:
             if choice == "1":
-                add_book(books) 
+                add_book(conn)  # Pass the connection to add_book
 
             elif choice == "2":
-                borrowed_book_title = input('\nWhat book would you like to check out?: ')
+                book_title = input('\nWhat book would you like to check out?: ')
                 user_name = input('\nWhat is your name?: ')
-                borrow_book(borrowed_book_title, user_name, books)
+                borrow_date = input('\nEnter the borrow date (YYYY-MM-DD): ')
+                borrow_book(conn, book_title, user_name, borrow_date)  # Pass the connection to borrow_book
 
             elif choice == "3":
                 returned_book_title = input("\nWhat book would you like to return?: ")
-                return_book(returned_book_title, books)
+                return_book(conn, returned_book_title)  # Pass the connection to return_book
 
             elif choice == "4":
-                search_book(books)
+                search_book(conn)  # Pass the connection to search_book
 
             elif choice == "5":
-                display_books(books)
+                display_books(conn)  # Pass the connection to display_books
 
             elif choice == "6":
                 break
@@ -55,35 +53,9 @@ def book_operations():
         except Exception as e:
             print(f"\nAn error occurred: {e}")
         finally:
-            print("\nBook operations complete. You can choose another option.")
+            print("\nBook operations complete.")
 
-class User:
-    def __init__(self, name, library_id, borrowed_books):
-        self.__name = name
-        self.__library_id = library_id
-        self.borrowed_books = borrowed_books
-
-    def name(self):
-        return self.__name
-
-    def name(self, user_name):
-        if not user_name:
-            raise ValueError("\nUser name cannot be empty.")
-        self.__name = user_name
-
-    def library_id(self):
-        return self.__library_id
-
-    def library_id(self, id):
-        if not id:
-            raise ValueError("\nID cannot be empty.")
-        self.__library_id = id
-
-from add_user_module import add_user, users
-from view_user_module import view_user
-from display_users_module import display_users
-
-def user_operations():
+def user_operations(conn):
     while True:
         print("\nUser Operations Menu")
         print("\n1. Add a new user")
@@ -91,17 +63,17 @@ def user_operations():
         print("\n3. Display all users")
         print("\n4. Back to main menu")
         
-        choice = input("Select an option: ")
+        choice = input("\nSelect an option: ")
 
         try:
             if choice == "1":
-                add_user()
+                add_user(conn)  # Pass the connection to add_user
 
             elif choice == "2":
-                view_user()
+                view_user(conn)  # Pass the connection to view_user
 
             elif choice == "3":
-                display_users(users)
+                display_users(conn)  # Pass the connection to display_users
 
             elif choice == "4":
                 break
@@ -112,18 +84,9 @@ def user_operations():
         except Exception as e:
             print(f"\nAn error occurred: {e}")
         finally:
-            print("\nUser operations complete. You can choose another option.")
+            print("\nUser operations complete.")
 
-class Author:
-    def __init__(self, author_name, biography):
-        self.author_name = author_name
-        self.biography = biography
-
-from add_author_module import add_author, authors
-from view_author_module import view_author
-from display_authors_module import display_authors
-
-def author_operations():
+def author_operations(conn):
     while True:
         print("\nAuthor Operations Menu")
         print("\n1. Add a new author")
@@ -131,17 +94,17 @@ def author_operations():
         print("\n3. Display all authors")
         print("\n4. Back to main menu")
         
-        choice = input("Select an option: ")
+        choice = input("\nSelect an option: ")
 
         try:
             if choice == "1":
-                add_author()
+                add_author(conn)  # Pass the connection to add_author
 
             elif choice == "2":
-                view_author(authors)
+                view_author(conn)  # Pass the connection to view_author
 
             elif choice == "3":
-                display_authors(authors)
+                display_authors(conn)  # Pass the connection to display_authors
 
             elif choice == "4":
                 break
@@ -152,32 +115,50 @@ def author_operations():
         except Exception as e:
             print(f"\nAn error occurred: {e}")
         finally:
-            print("\nAuthor operations complete. You can choose another option.")
+            print("\nAuthor operations complete.")
 
-while True:
+
+def main():
+    conn = connect_database()
+    if conn is None:
+        print("Failed to connect to the database. Exiting program.")
+        return  # Exit if connection failed
+
     print('\nWelcome to the Library Management System!')
-    print('\nMenu:')
-    print('\n1. Book Operations')
-    print('\n2. User Operations')
-    print('\n3. Author Operations')
-    print('\n4. Quit')
+    
+    while True:
+        print('\nMenu:')
+        print('\n1. Book Operations')
+        print('\n2. User Operations')
+        print('\n3. Author Operations')
+        print('\n4. Quit')
 
-    choice = input("\nSelect an option: ")
+        choice = input("\nSelect an option: ")
 
-    try:
-        if choice == "1":
-            book_operations()
-        elif choice == "2":
-            user_operations()
-        elif choice == "3":
-            author_operations()
-        elif choice == "4":
-            print("\nExiting the program.")
-            break
-        else:
-            print("\nInvalid choice, please select again.")
+        try:
+            if choice == "1":
+                book_operations(conn)  # Pass the connection to book_operations
+            elif choice == "2":
+                user_operations(conn)  # Pass the connection to user_operations
+            elif choice == "3":
+                author_operations(conn)  # Pass the connection to author_operations
+            elif choice == "4":
+                print("\nExiting the program.")
+                break
+            else:
+                print("\nInvalid choice, please select again.")
 
-    except Exception as e:
-        print(f"\nAn error occurred: {e}")
-    finally:
-        print("\nMain menu operations complete.")
+        except Exception as e:
+            print(f"\nAn error occurred: {e}")
+        finally:
+            print("\nMain menu operations complete.")
+
+    if conn.is_connected():
+        conn.close()
+
+    # Close the connection when done
+    # conn.close()
+    # print("Database connection closed.")
+
+if __name__ == "__main__":
+    main()
