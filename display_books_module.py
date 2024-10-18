@@ -1,11 +1,10 @@
 def display_books(conn):
-    cursor = conn.cursor()     # Create a cursor object
+    cursor = conn.cursor()
 
     try:
-        # SQL query to retrieve all books
         query = "SELECT title, genre, availability FROM books"
         cursor.execute(query)
-        books = cursor.fetchall()  # Fetch all records
+        books = cursor.fetchall()
 
         print("\nList of Books:")
         for index, (title, genre, availability) in enumerate(books, start=1):
@@ -14,4 +13,4 @@ def display_books(conn):
     except Exception as e:
         print(f"An error occurred while retrieving the books: {e}")
     finally:
-        cursor.close()  # Close the cursor
+        cursor.close()

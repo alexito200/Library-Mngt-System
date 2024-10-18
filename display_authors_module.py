@@ -1,11 +1,10 @@
 def display_authors(conn):
-    cursor = conn.cursor()     # Create a cursor object
+    cursor = conn.cursor()
 
     try:
-        # SQL query to retrieve all authors
         query = "SELECT id, author_name, biography FROM authors"
         cursor.execute(query)
-        authors = cursor.fetchall()  # Fetch all records
+        authors = cursor.fetchall()
 
         print("\nList of Authors:")
         for index, (id, author_name, biography) in enumerate(authors, start=1):
@@ -14,4 +13,4 @@ def display_authors(conn):
     except Exception as e:
         print(f"An error occurred while retrieving the authors: {e}")
     finally:
-        cursor.close()  # Close the cursor
+        cursor.close()

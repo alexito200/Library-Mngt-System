@@ -5,13 +5,13 @@ CREATE TABLE users (
 );
 
 CREATE TABLE borrowed_books (
-    id INT AUTO_INCREMENT PRIMARY KEY,       -- Unique ID for each borrowing transaction
-    user_id INT,                             -- Foreign key referencing the user who borrowed the book
-    book_id INT,                             -- Foreign key referencing the borrowed book
-    borrow_date DATE NOT NULL,               -- Date when the book was borrowed
-    return_date DATE DEFAULT NULL,           -- Date when the book was returned (NULL if not returned yet)
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,   -- References users table
-    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE    -- References books table
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    book_id INT,
+    borrow_date DATE NOT NULL,
+    return_date DATE DEFAULT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
 );
 
 

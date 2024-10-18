@@ -1,11 +1,10 @@
 def display_users(conn):
-    cursor = conn.cursor()     # Create a cursor object
+    cursor = conn.cursor()
 
     try:
-        # SQL query to select all users
         query = "SELECT id, user_name, library_id FROM users"
         cursor.execute(query)
-        users = cursor.fetchall()  # Fetch all results
+        users = cursor.fetchall()
 
         print("\nList of Users:")
         for index, (id, user_name, library_id) in enumerate(users, start=1):
@@ -14,4 +13,4 @@ def display_users(conn):
     except Exception as e:
         print(f"\nAn error occurred while displaying users: {e}")
     finally:
-        cursor.close()  # Close the cursor
+        cursor.close()
