@@ -1,3 +1,10 @@
+* Updated: 2024-10-18 *
+* Here are the updates to this program:
+    - classes removed
+    - mysql database (named test_db) integrated into the program to store books, authors, users, and borrowed books
+    - all of the modules being imported into the main program have been changed to sql queries
+    - there is now a new module named 'sql_connection' that connects the main program to the database
+
 Library Management System by Alex Alarcon
 
 TOC:
@@ -19,7 +26,6 @@ TOC:
   - Displaying all authors
   - Back to main menu
  
-This program is made up of three separate classes: Boooks, Users, and Authors.
 
 Books:
 
